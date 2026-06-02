@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BSI Prüfungsvorbereitung</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Premium Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner-box">
+      <div class="spinner"></div>
+      <div class="spinner-inner"></div>
+    </div>
+    <div class="loading-text">BSI Prüfungsvorbereitung</div>
+    <div class="loading-subtext">PDF-Fragenkatalog wird analysiert...</div>
+  </div>
+
+  <header>
+    <div class="header-container">
+      <h1>BSI Prüfungsvorbereitung</h1>
+      <nav>
+        <button id="homeBtn" class="nav-btn active">📊 Start</button>
+        <button id="mockBtn" class="nav-btn">📝 Mock‑Test</button>
+        <button id="tiraBtn" class="nav-btn">⏱️ TIRA‑Prüfung</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="mainContent">
+    <!-- Home / Dashboard Section -->
+    <section id="homeSection" class="active glass-panel">
+      <h2>Willkommen zum BSI Lernportal</h2>
+      <p class="subtitle">Bereite dich optimal auf deine BSI-Zertifizierung vor.</p>
+      
+      <!-- Progress Stats Grid -->
+      <div class="dashboard-grid">
+        <div class="stat-card">
+          <div class="stat-title">Gesamter Katalog</div>
+          <div id="statTotalQuestions" class="stat-value">--</div>
+          <div class="stat-desc">Fragen im PDF-Katalog geladen</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Letztes Testergebnis</div>
+          <div id="statLastExamScore" class="stat-value">--</div>
+          <div id="statLastExamStatus" class="stat-desc">Noch kein Test absolviert</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Bestehensquote</div>
+          <div class="stat-value">65%</div>
+          <div class="stat-desc">Erforderliche Mindestpunktzahl</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Fragen abgedeckt</div>
+          <div id="statCoverage" class="stat-value">--</div>
+          <div id="statCoverageDesc" class="stat-desc">Noch keine Fragen geübt</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Mock-Tests absolviert</div>
+          <div id="statMockCount" class="stat-value">--</div>
+          <div id="statMockAvg" class="stat-desc">Noch keine Mock-Tests</div>
+        </div>
+      </div>
+
+      <!-- Call to Actions -->
+      <div class="start-actions">
+        <div id="actionMock" class="action-card">
+          <div class="action-icon">📝</div>
+          <h3 class="action-title">Freies Üben (Mock-Test)</h3>
+          <p class="action-desc">Beantworte 20 zufällige Fragen in beliebiger Reihenfolge mit direktem Feedback nach jeder Antwort.</p>
+        </div>
+        <div id="actionTira" class="action-card">
+          <div class="action-icon">⏱️</div>
+          <h3 class="action-title">TIRA-Prüfung simulieren</h3>
+          <p class="action-desc">50 zufällige Fragen unter realen Bedingungen mit einem Zeitlimit von 50 Minuten lösen.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mock Test Section -->
+    <section id="mockSection" class="glass-panel">
+      <div class="quiz-header">
+        <h2 class="quiz-title">📝 Mock-Test (Übungsmodus)</h2>
+      </div>
+      
+      <!-- Dynamic Question Container -->
+      <div class="question-container"></div>
+      
+      <!-- Explanation Container (revealed on selection) -->
+      <div class="explanation-container"></div>
+
+      <!-- Controls -->
+      <div class="quiz-actions">
+        <button id="mockNextBtn" class="primary-btn" disabled>Nächste Frage &rarr;</button>
+      </div>
+
+      <!-- Progress Indicators -->
+      <div class="progress-container">
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-text">
+          <span class="progress-count">Frage --/--</span>
+          <span class="progress-pct">--%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIRA Exam Section -->
+    <section id="tiraSection" class="glass-panel">
+      <div class="quiz-header">
+        <h2 class="quiz-title">Simulierte TIRA-Prüfung (50 Fragen)</h2>
+        <div id="timer" class="quiz-timer">⏱️ 50:00</div>
+      </div>
+      
+      <!-- Dynamic Question Container -->
+      <div class="question-container"></div>
+      
+      <!-- Explanation Container (revealed on selection) -->
+      <div class="explanation-container"></div>
+
+      <!-- Controls -->
+      <div class="quiz-actions">
+        <button id="tiraNextBtn" class="primary-btn" disabled>Antwort bestätigen &rarr;</button>
+      </div>
+
+      <!-- Progress Indicators -->
+      <div class="progress-container">
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-text">
+          <span class="progress-count">Frage --/--</span>
+          <span class="progress-pct">--%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Exam Review Section -->
+    <section id="reviewSection" class="glass-panel">
+      <div class="review-intro">
+        <h2>📊 Prüfungs-Auswertung</h2>
+        <p class="subtitle">Hier siehst du alle Fragen im Detail mit deinen Antworten und den korrekten Lösungen.</p>
+        <button id="backToHomeBtn" class="secondary-btn">&larr; Zurück zum Dashboard</button>
+      </div>
+      
+      <div id="reviewList" class="review-list">
+        <!-- Injected programmatically -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Question Template -->
+  <template id="questionTemplate">
+    <div class="question-card">
+      <h3 class="question-text">Question Text</h3>
+      <ul class="options-list">
+        <!-- Programmatic LI injection -->
+      </ul>
+    </div>
+  </template>
+
+  <!-- Premium Results Modal -->
+  <div id="resultModal" class="modal hidden">
+    <div class="modal-content glass-panel">
+      <button id="closeModal" class="close-btn">&times;</button>
+      <div id="resultBadge" class="result-badge">🏆</div>
+      <h2 id="resultTitle" class="result-heading">Ergebnis</h2>
+      <p id="resultText" class="result-score">Du hast 0 von 50 Fragen richtig beantwortet (0%).</p>
+      
+      <div class="modal-actions">
+        <button id="reviewBtn" class="primary-btn" style="justify-content: center;">📊 Detaillierte Auswertung ansehen</button>
+        <button id="closeModalSecondary" class="secondary-btn">Zurück zur Startseite</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Readiness Check Modal -->
+  <div id="readinessModal" class="modal hidden">
+    <div class="modal-content glass-panel">
+      <h2 id="readinessTitle" class="result-heading">Bereit für die TIRA?</h2>
+      <div id="readinessStats" class="readiness-stats"></div>
+      <p id="readinessMsg" class="result-score"></p>
+      <div class="modal-actions">
+        <button id="readinessStartBtn" class="primary-btn" style="justify-content: center;">⏱️ Jetzt starten</button>
+        <button id="readinessMockBtn" class="secondary-btn">📝 Weiter üben</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
