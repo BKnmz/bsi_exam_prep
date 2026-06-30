@@ -45,4 +45,3 @@ Bestehensgrenze: **65 %**
 
 ---
 
-*Fragen oder Probleme? → Kursanbieter kontaktieren.*
