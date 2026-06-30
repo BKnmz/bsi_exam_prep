@@ -1,6 +1,5 @@
 // app.js – BSI Prüfungsvorbereitung (Fixed, Premium, Robust Parser & Glassmorphism Router)
 (() => {
-  const PDF_URL = "./01_BSI_Prüfung_Vorbereitung.pdf";
   const TOTAL_EXAM_QUESTIONS = 50;
   const TOTAL_MOCK_QUESTIONS = 20;
   const EXAM_TIME_MIN = 50;
@@ -16,7 +15,7 @@
   let qaPairs = [];          // Active session questions (subset of fullQaPairs)
   let currentMode = null;    // "mock" | "exam"
   let currentIndex = 0;
-  let selectedAnswers = [];  // TIRA Exam state: Array of { pair, selectedLetter, correct }
+  let selectedAnswers = [];  // ITSP Exam state: Array of { pair, selectedLetter, correct }
   let mockAnswers = [];      // Mock Mode: reset each session
   let timerId = null;
   let remainingSec = EXAM_TIME_MIN * 60;
@@ -25,6 +24,89 @@
   const storageKey = "bsi_progress_modern";
   const loadProgress = () => JSON.parse(localStorage.getItem(storageKey) || "{}");
   const saveProgress = (obj) => localStorage.setItem(storageKey, JSON.stringify(obj));
+
+  // ---------------------------------------------------------------
+  // Encrypted Question Loader (replaces PDF.js pipeline)
+  // ---------------------------------------------------------------
+  function hexToBytes(hex) {
+    const bytes = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < hex.length; i += 2) {
+      bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+    }
+    return bytes;
+  }
+
+  async function decryptQuestions(encData, password) {
+    const salt = hexToBytes(encData.salt);
+    const iv = hexToBytes(encData.iv);
+    const tag = hexToBytes(encData.tag);
+    const data = hexToBytes(encData.data);
+
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(password),
+      'PBKDF2',
+      false,
+      ['deriveKey']
+    );
+    const key = await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+      keyMaterial,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['decrypt']
+    );
+
+    const combined = new Uint8Array(data.length + tag.length);
+    combined.set(data);
+    combined.set(tag, data.length);
+
+    const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, combined);
+    return JSON.parse(new TextDecoder().decode(decrypted));
+  }
+
+  async function loadEncryptedQuestions(password) {
+    const resp = await fetch('questions.enc.json');
+    if (!resp.ok) throw new Error('questions.enc.json nicht gefunden.');
+    const encData = await resp.json();
+    try {
+      return await decryptQuestions(encData, password);
+    } catch (e) {
+      throw new Error('Falsches Passwort. Bitte erneut versuchen.');
+    }
+  }
+
+  function showPasswordModal() {
+    const overlay = $('loadingOverlay');
+    const pwOverlay = $('passwordOverlay');
+    if (overlay) overlay.classList.add('hidden');
+    if (pwOverlay) pwOverlay.style.display = 'flex';
+
+    const form = $('passwordForm');
+    const input = $('passwordInput');
+    const errorEl = $('passwordError');
+
+    if (!form) return;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pw = input.value.trim();
+      if (errorEl) errorEl.textContent = '';
+      try {
+        const loadedQuestions = await loadEncryptedQuestions(pw);
+        qaPairs = loadedQuestions;
+        fullQaPairs = [...qaPairs];
+        const prog = loadProgress();
+        prog.totalQuestions = fullQaPairs.length;
+        saveProgress(prog);
+        if (pwOverlay) pwOverlay.style.display = 'none';
+        switchSection('home');
+      } catch (err) {
+        if (errorEl) errorEl.textContent = err.message;
+        input.value = '';
+        input.focus();
+      }
+    });
+  }
 
   function updateCoverage(questionId, isCorrect) {
     const prog = loadProgress();
@@ -132,9 +214,9 @@
   }
 
   // ---------------------------------------------------------------
-  // Robust PDF.js Parser (Matches Questions and Extracts Correct Option by Font Style)
+  // (PDF.js parser removed — questions now loaded from questions.enc.json)
   // ---------------------------------------------------------------
-  async function loadPDF() {
+  async function loadPDF_UNUSED() {
     const overlay = $("loadingOverlay");
 
     try {
@@ -426,7 +508,7 @@
   }
 
   // ---------------------------------------------------------------
-  // Timer (TIRA Mode)
+  // Timer (ITSP Mode)
   // ---------------------------------------------------------------
   function startTimer() {
     remainingSec = EXAM_TIME_MIN * 60;
@@ -610,7 +692,7 @@
   }
 
   // ---------------------------------------------------------------
-  // Readiness Check Modal (shown before TIRA exam)
+  // Readiness Check Modal (shown before ITSP exam)
   // ---------------------------------------------------------------
   function showReadinessModal() {
     const prog = loadProgress();
@@ -631,7 +713,7 @@
     const statsEl = $("readinessStats");
     const msgEl = $("readinessMsg");
 
-    if (titleEl) titleEl.textContent = isReady ? "✅ Du bist bereit!" : "📈 Bereit für die TIRA?";
+    if (titleEl) titleEl.textContent = isReady ? "✅ Du bist bereit!" : "📈 Bereit für die ITSP?";
     if (statsEl) statsEl.innerHTML = `
       <div class="readiness-row"><span>Abdeckung</span><b>${covered}/${total} (${coveragePct}%)</b></div>
       <div class="readiness-row"><span>Mock-Tests absolviert</span><b>${mockHistory.length}</b></div>
@@ -733,13 +815,7 @@
     if (reviewBtn) reviewBtn.addEventListener("click", startReviewMode);
     if (backHomeBtn) backHomeBtn.addEventListener("click", () => switchSection("home"));
 
-    // Local PDF.js (offline-capable)
-    const script = document.createElement("script");
-    script.src = "./pdf.min.js";
-    script.onload = async () => {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = "./pdf.worker.min.js";
-      await loadPDF();
-    };
-    document.head.appendChild(script);
+    // Load encrypted question bundle (no PDF needed)
+    showPasswordModal();
   });
 })();

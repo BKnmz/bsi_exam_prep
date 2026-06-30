@@ -1,39 +1,48 @@
 # BSI Prüfungsvorbereitung
 
-Offline exam preparation app for BSI certification (TIRA). 170 questions, mock tests, timed exam simulation.
+Offline-Lernapp für die BSI IT-Sicherheitsprüfung (ITSP). 170 Fragen, Mock-Tests und simulierte Prüfung mit Zeitlimit. Läuft komplett ohne Internet.
 
 ![App Screenshot](screenshot.png)
 
-## Requirements
+---
 
-- [Node.js](https://nodejs.org/) (v16+)
+## Voraussetzungen
 
-## Installation
+**Node.js** muss einmalig installiert werden:
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/BKnmz/bsi_exam_prep.git
-cd bsi_exam_prep
+→ [nodejs.org](https://nodejs.org) aufrufen → „LTS" herunterladen → installieren → fertig.
 
-# 2. Install dependencies
-npm install
-```
+---
 
-## Run
+## App starten
 
-**Windows:** Double-click `start.bat`
+**Doppelklick auf `start.bat`**
 
-**Or manually:**
-```bash
-node server.js
-```
-Then open [http://localhost:12121](http://localhost:12121) in your browser.
+Ein Browserfenster öffnet sich automatisch. Passwort eingeben (vom Kursanbieter erhalten) → fertig.
 
-> Works fully offline — no internet connection required.
+---
 
-## Features
+## Was die App kann
 
-- **Mock-Test** — 20 random questions with instant feedback
-- **TIRA-Prüfung** — 50 questions, 50-minute timer, exam simulation
-- **Dashboard** — tracks score history and coverage stats
-- Pass threshold: 65%
+| Modus | Beschreibung |
+|-------|-------------|
+| **Mock-Test** | 20 zufällige Fragen mit direktem Feedback nach jeder Antwort |
+| **ITSP-Prüfung** | 50 Fragen unter Prüfungsbedingungen, 50 Minuten Zeitlimit |
+| **Dashboard** | Statistiken: Abdeckung, Testergebnisse, Fortschritt |
+
+Bestehensgrenze: **65 %**
+
+---
+
+## Fehlerbehebung
+
+| Problem | Lösung |
+|---------|--------|
+| „Node.js nicht gefunden" | Node.js von [nodejs.org](https://nodejs.org) installieren, dann `start.bat` neu starten |
+| „Falsches Passwort" | Passwort beim Kursanbieter erfragen |
+| Browser öffnet sich nicht | Manuell öffnen: [http://localhost:12121](http://localhost:12121) |
+| Schwarzer Bildschirm / App hängt | `start.bat` schließen und erneut starten |
+
+---
+
+*Fragen oder Probleme? → Kursanbieter kontaktieren.*

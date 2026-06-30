@@ -12,5 +12,8 @@
   "type": "commonjs",
   "dependencies": {
     "puppeteer": "^25.0.4"
+  },
+  "devDependencies": {
+    "pdfjs-dist": "^3.11.174"
   }
 }

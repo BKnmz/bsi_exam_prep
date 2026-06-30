@@ -1,3 +1,6 @@
 node_modules/
 .claude/
 test.js
+
+# Vendor-owned PDF — never commit
+*.pdf

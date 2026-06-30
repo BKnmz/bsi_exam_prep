@@ -7,14 +7,29 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Premium Loading Overlay -->
-  <div id="loadingOverlay" class="loading-overlay">
+  <!-- Password Gate -->
+  <div id="passwordOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#1e2130; border:1px solid #3a3f5a; border-radius:14px; padding:44px 40px; max-width:380px; width:90%; text-align:center; font-family:inherit; box-shadow:0 24px 80px rgba(0,0,0,0.6);">
+      <div style="font-size:2rem; margin-bottom:12px;">🔒</div>
+      <h2 style="color:#e2e8f0; margin:0 0 6px; font-size:1.3rem;">BSI Prüfungsvorbereitung</h2>
+      <p style="color:#64748b; margin:0 0 28px; font-size:0.875rem;">Passwort erforderlich</p>
+      <form id="passwordForm">
+        <input id="passwordInput" type="password" placeholder="Passwort eingeben …"
+          style="width:100%; padding:13px 14px; border-radius:8px; border:1px solid #3a3f5a; background:#0f1120; color:#e2e8f0; font-size:1rem; box-sizing:border-box; margin-bottom:10px; outline:none; transition:border-color 0.2s;" autofocus>
+        <div id="passwordError" style="color:#f87171; font-size:0.82rem; margin-bottom:14px; min-height:18px;"></div>
+        <button type="submit" style="width:100%; padding:13px; background:#4f6ef7; color:#fff; border:none; border-radius:8px; font-size:1rem; cursor:pointer; font-weight:600; letter-spacing:0.02em;">Weiter →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading Overlay (hidden while password modal is shown) -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
     <div class="spinner-box">
       <div class="spinner"></div>
       <div class="spinner-inner"></div>
     </div>
     <div class="loading-text">BSI Prüfungsvorbereitung</div>
-    <div class="loading-subtext">PDF-Fragenkatalog wird analysiert...</div>
+    <div class="loading-subtext">Fragenkatalog wird geladen…</div>
   </div>
 
   <header>
@@ -23,7 +38,7 @@
       <nav>
         <button id="homeBtn" class="nav-btn active">📊 Start</button>
         <button id="mockBtn" class="nav-btn">📝 Mock‑Test</button>
-        <button id="tiraBtn" class="nav-btn">⏱️ TIRA‑Prüfung</button>
+        <button id="tiraBtn" class="nav-btn">⏱️ ITSP‑Prüfung</button>
       </nav>
     </div>
   </header>
@@ -39,7 +54,7 @@
         <div class="stat-card">
           <div class="stat-title">Gesamter Katalog</div>
           <div id="statTotalQuestions" class="stat-value">--</div>
-          <div class="stat-desc">Fragen im PDF-Katalog geladen</div>
+          <div class="stat-desc">Fragen im Fragenkatalog geladen</div>
         </div>
         <div class="stat-card">
           <div class="stat-title">Letztes Testergebnis</div>
@@ -72,7 +87,7 @@
         </div>
         <div id="actionTira" class="action-card">
           <div class="action-icon">⏱️</div>
-          <h3 class="action-title">TIRA-Prüfung simulieren</h3>
+          <h3 class="action-title">ITSP-Prüfung simulieren</h3>
           <p class="action-desc">50 zufällige Fragen unter realen Bedingungen mit einem Zeitlimit von 50 Minuten lösen.</p>
         </div>
       </div>
@@ -107,10 +122,10 @@
       </div>
     </section>
 
-    <!-- TIRA Exam Section -->
+    <!-- ITSP Exam Section -->
     <section id="tiraSection" class="glass-panel">
       <div class="quiz-header">
-        <h2 class="quiz-title">Simulierte TIRA-Prüfung (50 Fragen)</h2>
+        <h2 class="quiz-title">Simulierte ITSP-Prüfung (50 Fragen)</h2>
         <div id="timer" class="quiz-timer">⏱️ 50:00</div>
       </div>
       
@@ -179,7 +194,7 @@
   <!-- Readiness Check Modal -->
   <div id="readinessModal" class="modal hidden">
     <div class="modal-content glass-panel">
-      <h2 id="readinessTitle" class="result-heading">Bereit für die TIRA?</h2>
+      <h2 id="readinessTitle" class="result-heading">Bereit für die ITSP?</h2>
       <div id="readinessStats" class="readiness-stats"></div>
       <p id="readinessMsg" class="result-score"></p>
       <div class="modal-actions">
