@@ -815,6 +815,15 @@
     if (reviewBtn) reviewBtn.addEventListener("click", startReviewMode);
     if (backHomeBtn) backHomeBtn.addEventListener("click", () => switchSection("home"));
 
+    const resetDataBtn = $("resetDataBtn");
+    if (resetDataBtn) {
+      resetDataBtn.addEventListener("click", () => {
+        if (!confirm("Gesamten Lernfortschritt löschen? Diese Aktion kann nicht rückgängig gemacht werden.")) return;
+        localStorage.removeItem(storageKey);
+        refreshDashboardStats();
+      });
+    }
+
     // Load encrypted question bundle (no PDF needed)
     showPasswordModal();
   });
